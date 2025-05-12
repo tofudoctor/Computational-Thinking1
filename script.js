@@ -1,8 +1,25 @@
+// 🔥 Firebase 初始化（請換成你自己的）
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_AUTHDOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_STORAGE_BUCKET",
+  messagingSenderId: "XXXX",
+  appId: "YOUR_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const scoresCollection = db.collection("snake_scores");
+
+// 🐍 遊戲原本變數與初始化邏輯
 const board = document.getElementById('game-board');
 const scoreEl = document.getElementById('score');
 const modal = document.getElementById('game-over-modal');
 const finalScore = document.getElementById('final-score');
 const restartBtn = document.getElementById('restart-btn');
+const nameInput = document.getElementById('player-name');
+const leaderboard = document.getElementById('leaderboard');
 
 const boardSize = 20;
 let cells = [];
@@ -14,7 +31,6 @@ let gameInterval = null;
 let gameStarted = false;
 
 function initGame() {
-  // 重置狀態
   board.innerHTML = '';
   cells = [];
   snake = [{ x: 10, y: 10 }];
@@ -25,7 +41,6 @@ function initGame() {
   gameStarted = false;
   clearInterval(gameInterval);
 
-  // 建立格子
   for (let i = 0; i < boardSize * boardSize; i++) {
     const cell = document.createElement('div');
     cell.classList.add('cell');
@@ -35,6 +50,7 @@ function initGame() {
 
   spawnFood();
   draw();
+  loadLeaderboard(); // ⚠️ 讀排行榜
 }
 
 function getIndex(x, y) {
@@ -44,9 +60,7 @@ function getIndex(x, y) {
 function draw() {
   cells.forEach(cell => cell.className = 'cell');
   snake.forEach(part => cells[getIndex(part.x, part.y)].classList.add('snake'));
-  if (food) {
-    cells[getIndex(food.x, food.y)].classList.add('food');
-  }
+  if (food) cells[getIndex(food.x, food.y)].classList.add('food');
 }
 
 function spawnFood() {
@@ -62,8 +76,6 @@ function spawnFood() {
 
 function move() {
   const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
-
-  // 撞牆或撞自己
   if (
     head.x < 0 || head.y < 0 || head.x >= boardSize || head.y >= boardSize ||
     snake.some(part => part.x === head.x && part.y === head.y)
@@ -74,7 +86,6 @@ function move() {
   }
 
   snake.unshift(head);
-
   if (food && head.x === food.x && head.y === food.y) {
     score++;
     scoreEl.textContent = '分數：' + score;
@@ -82,7 +93,6 @@ function move() {
   } else {
     snake.pop();
   }
-
   draw();
 }
 
@@ -109,8 +119,34 @@ function showGameOver() {
   modal.style.display = 'flex';
 }
 
+// ✅ 儲存分數到 Firebase
+async function saveScore(name, score) {
+  if (!name) name = '匿名';
+  await scoresCollection.add({ name, score, timestamp: Date.now() });
+  loadLeaderboard();
+}
+
+// ✅ 顯示排行榜
+async function loadLeaderboard() {
+  const snapshot = await scoresCollection
+    .orderBy('score', 'desc')
+    .limit(5)
+    .get();
+
+  leaderboard.innerHTML = '';
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const li = document.createElement('li');
+    li.textContent = `${data.name} - ${data.score} 分`;
+    leaderboard.appendChild(li);
+  });
+}
+
+// 🔁 點按重新開始
 restartBtn.addEventListener('click', () => {
+  const name = nameInput.value.trim();
   modal.style.display = 'none';
+  saveScore(name, score);
   initGame();
 });
 

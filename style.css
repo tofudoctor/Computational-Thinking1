@@ -72,3 +72,16 @@ body {
     background-color: #005f99;
   }
   
+  #leaderboard {
+    list-style: none;
+    padding: 0;
+    max-width: 400px;
+    margin: 0 auto 20px;
+    color: gold;
+  }
+  
+  #leaderboard li {
+    text-align: left;
+    font-size: 16px;
+    padding: 5px;
+  }

@@ -2,7 +2,6 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>貪食蛇遊戲</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -11,14 +10,21 @@
   <div id="game-board"></div>
   <p id="score">分數：0</p>
 
-  <!-- 結束視窗 -->
+  <h2>🏆 排行榜</h2>
+  <ol id="leaderboard"></ol>
+
   <div id="game-over-modal">
     <div class="modal-content">
       <h2>遊戲結束！</h2>
       <p id="final-score"></p>
+      <input id="player-name" type="text" placeholder="請輸入暱稱">
       <button id="restart-btn">重新開始</button>
     </div>
   </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <script src="script.js"></script>
 </body>
