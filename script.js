@@ -1,11 +1,12 @@
 // 🔥 Firebase 初始化（請換成你自己的）
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_AUTHDOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_STORAGE_BUCKET",
-  messagingSenderId: "XXXX",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBuuBAJO0PRW6p-d3Lixm5d9gSwfKjSMKs",
+  authDomain: "fir-e1702.firebaseapp.com",
+  projectId: "fir-e1702",
+  storageBucket: "fir-e1702.appspot.com",
+  messagingSenderId: "965635120144",
+  appId: "1:965635120144:web:bf23084050b68529543e95",
+  measurementId: "G-Z7YRZ49TVW"
 };
 
 firebase.initializeApp(firebaseConfig);
